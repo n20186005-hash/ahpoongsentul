@@ -17,7 +17,7 @@ const ASSETS = {
   realRiver: "/assets/ah-poong-river-real.jpg",
 };
 
-const mapUrl = "https://www.google.com/maps/search/?api=1&query=Ah%20Poong%20Sentul";
+const mapUrl = "https://maps.app.goo.gl/kr7TTUgpwtk8vd1R7";
 
 function StructuredData({ faqs }: { faqs: readonly (readonly [string, string])[] }) {
   const data = [
