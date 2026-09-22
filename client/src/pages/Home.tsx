@@ -143,7 +143,7 @@ const copy = {
     ],
     sourceTitle: "Catatan sumber & batasan",
     sources: "Lokasi, koordinat, kategori, ringkasan deskripsi, dan agregat penilaian dirujuk dari Google Maps. Informasi kunjungan disajikan sebagai panduan umum dan tidak menggantikan pembaruan pengelola.",
-    footerTitle: "Ah Poong Sentul Guide",
+    footerTitle: "Ah Poong Sentul Bogor — Panduan Wisata",
     footerBody: "Proyek panduan pengunjung independen dan nonkomersial. Tidak berafiliasi dengan pengelola tempat, pemerintah, atau organisasi resmi mana pun.",
     footerRef: "Konteks lokasi dirujukkan secara terbuka kepada Pemerintah Kabupaten Bogor, instansi kebudayaan dan pariwisata Kabupaten Bogor, serta sumber pariwisata nasional Indonesia. Tidak memuat rekomendasi komersial.",
     photoRights: "Hak cipta foto tetap berada pada fotografer atau pemegang hak terkait.",
@@ -246,7 +246,7 @@ const copy = {
     ],
     sourceTitle: "Source note & limits",
     sources: "Location, coordinates, category, descriptive summary, and rating aggregate are referenced from Google Maps. Visiting information is presented as general guidance and does not replace operator updates.",
-    footerTitle: "Ah Poong Sentul Guide",
+    footerTitle: "Ah Poong Sentul Bogor — Travel Guide",
     footerBody: "An independent, non-commercial visitor information project. It is not affiliated with the venue operator, government, or any official organisation.",
     footerRef: "Place context is openly cross-checked against Bogor Regency Government, Bogor Regency culture and tourism bodies, and national Indonesia tourism resources. No commercial recommendations are included.",
     photoRights: "Photographs remain the copyright of their respective photographers or rights holders.",
@@ -299,6 +299,25 @@ export default function Home() {
       }
     }
   }, [cookieVisible]);
+
+  useEffect(() => {
+    const titles: Record<Language, string> = {
+      id: "Ah Poong Sentul Bogor — Panduan Wisata · Tiket Masuk, Jam Buka & Menu",
+      en: "Ah Poong Sentul Bogor — Travel Guide · Entry Ticket, Hours & Menu",
+    };
+    const descriptions: Record<Language, string> = {
+      id: "Panduan Ah Poong Sentul di Eco Art Park Sentul City, Bogor. Tiket masuk umumnya gratis, jam buka 10.00, menu & resto kuliner tepi sungai, akses, dan FAQ pengunjung.",
+      en: "Independent guide to Ah Poong Sentul in Eco Art Park Sentul City, Bogor. Entry is generally free, opens 10:00, riverside food & restaurant menu, access, and visitor FAQ.",
+    };
+    document.title = titles[language];
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", descriptions[language]);
+  }, [language]);
 
   function selectLanguage(next: Language) {
     setLanguage(next);
