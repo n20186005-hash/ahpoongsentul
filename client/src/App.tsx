@@ -1,46 +1,11 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import LegalPage from "./pages/LegalPage";
-
-
-function Router() {
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/privacy"}><LegalPage page="privacy" /></Route>
-      <Route path={"/terms"}><LegalPage page="terms" /></Route>
-      <Route path={"/cookies"}><LegalPage page="cookies" /></Route>
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+import Home from './pages/Home';
+import LegalPage from './pages/LegalPage';
+import NotFound from './pages/NotFound';
+export default function App() {
+ const route = window.location.pathname.replace(/\/+$/, '') || '/';
+ const language = route === '/en' || route.startsWith('/en/') ? 'en' : 'id';
+ const slug = route.replace(/^\/en(?:\/|$)/, '/').replace(/^\//, '');
+ if (!slug) return <Home initialLanguage={language}/>;
+ if (slug === 'privacy' || slug === 'terms' || slug === 'cookies') return <LegalPage page={slug} initialLanguage={language}/>;
+ return <NotFound/>;
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-}
-
-export default App;

@@ -1,6 +1,7 @@
 /* River Market Archive design system: calm parchment surface, Sungai Hijau ink, editorial serif hierarchy. */
 import { ArrowLeft, Check, Globe2, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { readConsent, saveConsentChoice, applyAnalytics } from "../consent";
 
 type Language = "id" | "en";
 type PageType = "privacy" | "terms" | "cookies";
@@ -16,14 +17,14 @@ const copy = {
     introPrivacy: "Ringkasan tentang data minimum yang dapat diproses saat Anda memakai panduan independen ini.",
     introTerms: "Ketentuan singkat untuk memakai informasi Ah Poong Sentul Guide secara bertanggung jawab.",
     introCookies: "Kelola izin untuk kuki yang membantu fungsi dan pemahaman penggunaan situs.",
-    updated: "Diperbarui: Agustus 2026",
+    updated: "Diperbarui: 19 Oktober 2026",
     language: "Bahasa",
     sections: {
       privacy: [
-        ["Informasi yang kami proses", "Kami hanya memproses data minimum yang diperlukan untuk menjalankan situs. Data tersebut dapat meliputi data penelusuran teknis seperti alamat IP, jenis peramban, halaman yang dibuka, kuki, serta informasi yang Anda berikan secara sukarela bila memilih menghubungi kami."],
-        ["Cara penggunaan", "Data digunakan untuk menjaga keamanan dan kinerja situs, memahami pola penggunaan secara agregat, meningkatkan kejelasan panduan, menanggapi permintaan, serta memenuhi kewajiban hukum yang berlaku."],
-        ["Layanan pihak ketiga", "Peta tertanam dan analitik, bila Anda mengizinkannya, dapat diproses oleh penyedia pihak ketiga sesuai kebijakan mereka sendiri. Kami tidak menjual data pribadi dan tidak membuat profil pemasaran."],
-        ["Hak Anda", "Anda dapat meminta akses, perbaikan, penghapusan, pembatasan pemrosesan, atau menyampaikan keberatan sesuai hukum yang berlaku. Gunakan kanal kontak yang tersedia pada situs untuk permintaan terkait data."],
+        ["Informasi yang kami proses", "Kami hanya memproses data minimum yang diperlukan untuk menjalankan situs. Data tersebut dapat meliputi data penelusuran teknis seperti alamat IP, jenis peramban, halaman yang dibuka, kuki, tanpa formulir kontak, akun atau pemesanan pada situs ini."],
+        ["Cara penggunaan", "Data digunakan untuk menjaga keamanan dan kinerja situs, memahami pola penggunaan secara agregat, meningkatkan kejelasan panduan, dan menjaga fungsi pilihan privasi."],
+        ["Layanan pihak ketiga", "Font Google dan peta tertanam membuat permintaan ke layanan Google, terpisah dari pilihan analitik. Google Analytics hanya dimuat setelah persetujuan. Penyedia pihak ketiga memakai kebijakan mereka sendiri. Kami tidak menjual data pribadi dan tidak membuat profil pemasaran."],
+        ["Hak Anda", "Anda dapat meminta akses, perbaikan, penghapusan, pembatasan pemrosesan, atau menyampaikan keberatan sesuai hukum yang berlaku. Situs ini tidak menyediakan kanal permintaan data atau formulir kontak. Anda dapat mengubah pilihan analitik melalui Pengaturan Kuki."],
       ],
       terms: [
         ["Sifat informasi", "Situs ini adalah panduan independen untuk tujuan edukasi dan perencanaan awal. Informasi bukan jaminan operasional, promosi, atau pengganti konfirmasi langsung kepada pengelola lokasi."],
@@ -33,11 +34,11 @@ const copy = {
       ],
     },
     essential: "Kuki esensial",
-    essentialBody: "Diperlukan agar situs dapat menyimpan pilihan dasar dan bekerja dengan benar.",
+    essentialBody: "Penyimpanan lokal mengingat pilihan persetujuan bila perangkat mengizinkan; situs tetap dapat dibaca tanpa penyimpanan.",
     analytics: "Kuki analitik",
     analyticsBody: "Membantu kami memahami penggunaan situs secara agregat melalui Google Analytics 4.",
     preferences: "Kuki preferensi",
-    preferencesBody: "Mengingat pilihan bahasa Anda pada perangkat ini.",
+    preferencesBody: "Bahasa dipilih melalui URL halaman, tanpa menyimpan pilihan bahasa.",
     always: "Selalu aktif",
     save: "Simpan preferensi",
     saved: "Preferensi tersimpan di perangkat ini.",
@@ -51,14 +52,14 @@ const copy = {
     introPrivacy: "A summary of the minimal data that may be processed when you use this independent guide.",
     introTerms: "Brief terms for using Ah Poong Sentul Guide information responsibly.",
     introCookies: "Manage permissions for cookies that support site functions and help us understand usage.",
-    updated: "Updated: August 2026",
+    updated: "Updated: 19 October 2026",
     language: "Language",
     sections: {
       privacy: [
-        ["Information we process", "We process only the minimum data needed to operate the site. This may include technical browsing data such as IP address, browser type, pages viewed, cookies, and information you voluntarily provide if you choose to contact us."],
-        ["How it is used", "Data helps us maintain site security and performance, understand aggregate usage patterns, improve the clarity of this guide, respond to requests, and meet applicable legal obligations."],
-        ["Third-party services", "Embedded maps and analytics, when you allow them, may be processed by third-party providers under their own policies. We do not sell personal data or create marketing profiles."],
-        ["Your rights", "You may request access, correction, deletion, restriction of processing, or raise an objection where applicable law provides these rights. Use the contact channel made available on this site for data-related requests."],
+        ["Information we process", "We process only the minimum data needed to operate the site. This may include technical browsing data such as IP address, browser type, pages viewed, cookies, without a contact form, accounts or booking features on this site."],
+        ["How it is used", "Data helps us maintain site security and performance, understand aggregate usage patterns, improve the clarity of this guide, and maintain privacy choices."],
+        ["Third-party services", "Google Fonts and the embedded map make requests to Google separately from analytics choices. Google Analytics loads only after consent. Third-party providers apply their own policies. We do not sell personal data or create marketing profiles."],
+        ["Your rights", "You may request access, correction, deletion, restriction of processing, or raise an objection where applicable law provides these rights. This site provides no data-request channel or contact form. You can change analytics choices in Cookie Settings."],
       ],
       terms: [
         ["Nature of this information", "This site is an independent guide for educational use and early-stage trip planning. It is not an operational guarantee, promotion, or substitute for confirmation with the location’s operator."],
@@ -68,11 +69,11 @@ const copy = {
       ],
     },
     essential: "Essential cookies",
-    essentialBody: "Needed for the site to remember core choices and operate correctly.",
+    essentialBody: "Local storage remembers consent choices when permitted; pages remain readable when storage is blocked.",
     analytics: "Analytics cookies",
     analyticsBody: "Help us understand aggregate site use through Google Analytics 4.",
     preferences: "Preference cookies",
-    preferencesBody: "Remember your language choice on this device.",
+    preferencesBody: "Language follows the page URL; no language preference is stored.",
     always: "Always active",
     save: "Save preferences",
     saved: "Your preferences have been saved on this device.",
@@ -89,14 +90,14 @@ function preference(defaultValue: boolean, key: string) {
   }
 }
 
-export default function LegalPage({ page }: { page: PageType }) {
-  const [language, setLanguage] = useState<Language>("id");
+export default function LegalPage({ page, initialLanguage = "id" }: { page: PageType; initialLanguage?: Language }) {
+  const [language, setLanguage] = useState<Language>(initialLanguage);
   const [analytics, setAnalytics] = useState(false);
   const [preferences, setPreferences] = useState(true);
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setLanguage(localStorage.getItem("ahpoong-language") === "en" ? "en" : "id");
+    applyAnalytics(readConsent()?.analytics === true);
     setAnalytics(preference(false, "analytics"));
     setPreferences(preference(true, "preferences"));
   }, []);
@@ -106,19 +107,17 @@ export default function LegalPage({ page }: { page: PageType }) {
   const intro = page === "privacy" ? t.introPrivacy : page === "terms" ? t.introTerms : t.introCookies;
 
   function changeLanguage(next: Language) {
-    setLanguage(next);
-    localStorage.setItem("ahpoong-language", next);
+    window.location.href = `${next === "en" ? "/en" : ""}/${page}/`;
   }
 
   function savePreferences() {
-    localStorage.setItem("ahpoong-consent", JSON.stringify({ essential: true, analytics, preferences }));
-    setSaved(true);
+    setSaved(saveConsentChoice({ essential: true, analytics, preferences: false }));
   }
 
   return (
     <main className="legal-shell">
       <header className="legal-header">
-        <a className="brand brand--ink" href="/">
+        <a className="brand brand--ink" href={language === "en" ? "/en/" : "/"}>
           <img src={MARK_URL} alt="" />
           <span>Ah Poong <em>Sentul Guide</em></span>
         </a>
@@ -133,7 +132,7 @@ export default function LegalPage({ page }: { page: PageType }) {
         <div className="legal-kicker"><ShieldCheck size={15} /> {t.updated}</div>
         <h1>{title}</h1>
         <p>{intro}</p>
-        <a className="text-link" href="/"><ArrowLeft size={16} /> {t.back}</a>
+        <a className="text-link" href={language === "en" ? "/en/" : "/"}><ArrowLeft size={16} /> {t.back}</a>
       </section>
 
       <section className="legal-content" aria-label={title}>
@@ -148,16 +147,16 @@ export default function LegalPage({ page }: { page: PageType }) {
           <div className="cookie-panel">
             <PreferenceRow title={t.essential} body={t.essentialBody} checked disabled label={t.always} onChange={() => undefined} />
             <PreferenceRow title={t.analytics} body={t.analyticsBody} checked={analytics} onChange={setAnalytics} />
-            <PreferenceRow title={t.preferences} body={t.preferencesBody} checked={preferences} onChange={setPreferences} />
+
             <div className="cookie-actions">
               <button className="primary-button" onClick={savePreferences}><Check size={17} /> {t.save}</button>
-              {saved && <span className="saved-state"><Globe2 size={15} /> {t.saved}</span>}
+              {saved !== null && <span className="saved-state" role="status"><Globe2 size={15} /> {saved ? t.saved : language === "id" ? "Pilihan berlaku di halaman ini, tetapi tidak tersimpan di perangkat." : "Choice applies on this page but could not be saved on this device."}</span>}
             </div>
           </div>
         )}
       </section>
 
-      <footer className="legal-footer">{t.footer}</footer>
+      <footer className="legal-footer"><p>{t.footer}</p><a href={language === "en" ? "/en/privacy/" : "/privacy/"}>{t.privacy}</a> · <a href={language === "en" ? "/en/terms/" : "/terms/"}>{t.terms}</a> · <a href={language === "en" ? "/en/cookies/" : "/cookies/"}>{t.cookies}</a></footer>
     </main>
   );
 }
