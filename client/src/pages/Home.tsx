@@ -125,8 +125,8 @@ const copy = {
       ["Menginap", "Cari rumah tamu, hotel atau vila di peta terkini. Pertimbangkan akses jalan, rencana berkendara, serta kebutuhan mobilitas."],
       ["Kebutuhan harian", "Cari minimarket, swalayan atau layanan kendaraan sesuai kebutuhan. Periksa lokasi serta jam buka sendiri sebelum bergantung pada suatu fasilitas."],
     ],
-    galleryTitle: "Catatan visual dari kawasan.",
-    galleryBody: "Gambar referensi membantu orientasi suasana; akses, layanan dan kondisi saat ini dapat berbeda.",
+    galleryTitle: "Referensi visual untuk perencanaan.",
+    galleryBody: "Gambar referensi membantu orientasi suasana. Sumber dan lokasi asal gambar belum diverifikasi secara independen; akses, layanan dan kondisi saat ini dapat berbeda.",
     mapKicker: "06 · TITIK DI PETA",
     mapTitle: "Temukan Ah Poong Sentul di tepi Jl. Ir H. Juanda.",
     mapBody: "Gunakan peta untuk memeriksa rute, kondisi lalu lintas, titik turun, dan pembaruan lokasi sebelum berangkat.",
@@ -228,8 +228,8 @@ const copy = {
       ["Staying overnight", "Search current maps for guesthouses, hotels or villas. Consider road access, your driving plan, and mobility needs."],
       ["Daily needs", "Search current maps for convenience stores, supermarkets or vehicle services. Check location and opening hours yourself before relying on any facility."],
     ],
-    galleryTitle: "Visual field notes from the area.",
-    galleryBody: "Reference images provide visual context; current access, services and conditions may differ.",
+    galleryTitle: "Reference views for planning.",
+    galleryBody: "Reference images provide visual context. Their source and original location have not been independently verified; current access, services and conditions may differ.",
     mapKicker: "06 · MAP POINT",
     mapTitle: "Find Ah Poong Sentul beside Jl. Ir H. Juanda.",
     mapBody: "Use the map to check your route, traffic conditions, drop-off point, and location updates before you set out.",
@@ -393,7 +393,7 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
 
             <section className="content-section photo-section">
               <div><div className="section-kicker">{language === "id" ? "GAMBAR REFERENSI" : "REFERENCE IMAGES"}</div><h2>{t.galleryTitle}</h2><p>{t.galleryBody}</p></div>
-              <div className="real-photo-grid"><figure><img src={ASSETS.realMarket} alt={language === "id" ? "Bangunan dan tangga di seberang sungai — gambar referensi" : "Building and steps across a river — reference image"} /><figcaption>Ah Poong Sentul · {language === "id" ? "gambar referensi; kondisi saat ini dapat berbeda" : "reference image; current conditions may differ"}</figcaption></figure><figure><img src={ASSETS.realRiver} alt={language === "id" ? "Air sungai, tepian dan perahu kecil — gambar referensi" : "River water, banks and small boats — reference image"} /><figcaption>{language === "id" ? "Tepian sungai di kawasan Ah Poong" : "Riverside setting in the Ah Poong area"}</figcaption></figure></div>
+              <div className="real-photo-grid"><figure><img src={ASSETS.realMarket} alt={language === "id" ? "Bangunan dan tangga di seberang sungai — gambar referensi" : "Building and steps across a river — reference image"} /><figcaption>{language === "id" ? "Bangunan dan tangga di seberang sungai · gambar referensi; lokasi asal belum diverifikasi" : "Building and steps across a river · reference image; original location unverified"}</figcaption></figure><figure><img src={ASSETS.realRiver} alt={language === "id" ? "Air sungai, tepian dan perahu kecil — gambar referensi" : "River water, banks and small boats — reference image"} /><figcaption>{language === "id" ? "Air sungai dan perahu kecil · gambar referensi; lokasi asal belum diverifikasi" : "River water and small boats · reference image; original location unverified"}</figcaption></figure></div>
             </section>
 
             <section className="content-section map-section">
