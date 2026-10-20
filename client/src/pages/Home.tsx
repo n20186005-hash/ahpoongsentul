@@ -10,9 +10,9 @@ import {
 type Language = "id" | "en";
 
 const ASSETS = {
-  hero: "/assets/ah-poong-riverside-hero.jpg",
-  pavilion: "/assets/ah-poong-pavilion-detail.jpg",
-  riverwalk: "/assets/ah-poong-riverwalk.jpg",
+  hero: "/assets/ah-poong-riverside-hero.png",
+  pavilion: "/assets/ah-poong-pavilion-detail.png",
+  riverwalk: "/assets/ah-poong-riverwalk.png",
   mark: "/assets/ah-poong-river-mark.png",
   realMarket: "/assets/ah-poong-riverside-real.jpg",
   realRiver: "/assets/ah-poong-river-real.jpg",
