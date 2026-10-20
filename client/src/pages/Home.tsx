@@ -321,7 +321,7 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
 
       <main>
         <section className="hero-section">
-          <img className="hero-image" src={ASSETS.hero} alt="Ah Poong Sentul riverside market atmosphere" />
+          <img className="hero-image" src={ASSETS.hero} alt={language === "id" ? "Bangunan beratap genteng dan jembatan di tepi sungai — gambar referensi" : "Tiled-roof buildings and a bridge beside a river — reference image"} />
           <div className="hero-overlay" />
           <div className="hero-content">
             <div className="eyebrow">{t.eyebrow}</div>
@@ -365,7 +365,7 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
               <div className="section-kicker">{t.storyKicker}</div>
               <div className="story-grid">
                 <div className="story-copy"><h2>{t.storyTitle}</h2><p>{t.storyBody}</p><ol>{t.storyPoints.map(([title, body], index) => <li key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{body}</p></div></li>)}</ol></div>
-                <figure className="detail-figure"><img src={ASSETS.pavilion} alt="Timber pavilion detail beside the river in Sentul" /><figcaption>{t.photoNote}</figcaption></figure>
+                <figure className="detail-figure"><img src={ASSETS.pavilion} alt={language === "id" ? "Tiang berukir dan meja kayu di dekat air — gambar referensi" : "Carved post and wooden table beside water — reference image"} /><figcaption>{t.photoNote}</figcaption></figure>
               </div>
             </section>
 
@@ -387,13 +387,13 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
             </section>
 
             <section id="nearby" className="content-section nearby-section">
-              <div className="nearby-media"><img src={ASSETS.riverwalk} alt="Tropical riverwalk in the Sentul area" /></div>
+              <div className="nearby-media"><img src={ASSETS.riverwalk} alt={language === "id" ? "Jalur berpagar di tepi sungai dengan pepohonan — gambar referensi" : "Fenced riverside path with trees — reference image"} /></div>
               <div className="nearby-copy"><div className="section-kicker">{t.aroundKicker}</div><h2>{t.aroundTitle}</h2><p>{t.aroundIntro}</p><div className="nearby-list">{t.around.map(([title, body]) => <article key={title}><ChevronRight size={17} /><div><h3>{title}</h3><p>{body}</p></div></article>)}</div></div>
             </section>
 
             <section className="content-section photo-section">
               <div><div className="section-kicker">{language === "id" ? "GAMBAR REFERENSI" : "REFERENCE IMAGES"}</div><h2>{t.galleryTitle}</h2><p>{t.galleryBody}</p></div>
-              <div className="real-photo-grid"><figure><img src={ASSETS.realMarket} alt="Ah Poong Sentul across the riverside" /><figcaption>Ah Poong Sentul · {language === "id" ? "gambar referensi; kondisi saat ini dapat berbeda" : "reference image; current conditions may differ"}</figcaption></figure><figure><img src={ASSETS.realRiver} alt="River setting at Ah Poong Sentul" /><figcaption>{language === "id" ? "Tepian sungai di kawasan Ah Poong" : "Riverside setting in the Ah Poong area"}</figcaption></figure></div>
+              <div className="real-photo-grid"><figure><img src={ASSETS.realMarket} alt={language === "id" ? "Bangunan dan tangga di seberang sungai — gambar referensi" : "Building and steps across a river — reference image"} /><figcaption>Ah Poong Sentul · {language === "id" ? "gambar referensi; kondisi saat ini dapat berbeda" : "reference image; current conditions may differ"}</figcaption></figure><figure><img src={ASSETS.realRiver} alt={language === "id" ? "Air sungai, tepian dan perahu kecil — gambar referensi" : "River water, banks and small boats — reference image"} /><figcaption>{language === "id" ? "Tepian sungai di kawasan Ah Poong" : "Riverside setting in the Ah Poong area"}</figcaption></figure></div>
             </section>
 
             <section className="content-section map-section">
