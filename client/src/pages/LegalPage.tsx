@@ -1,7 +1,7 @@
 /* River Market Archive design system: calm parchment surface, Sungai Hijau ink, editorial serif hierarchy. */
 import { ArrowLeft, Check, Globe2, ShieldCheck } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { readConsent, saveConsentChoice, applyAnalytics } from "../consent";
+import { readConsent, saveConsentChoice, applyAnalytics, watchConsent, consentStatus } from "../consent";
 
 type Language = "id" | "en";
 type PageType = "privacy" | "terms" | "cookies";
@@ -17,7 +17,7 @@ const copy = {
     introPrivacy: "Ringkasan tentang data minimum yang dapat diproses saat Anda memakai panduan independen ini.",
     introTerms: "Ketentuan singkat untuk memakai informasi Ah Poong Sentul Guide secara bertanggung jawab.",
     introCookies: "Kelola izin untuk kuki yang membantu fungsi dan pemahaman penggunaan situs.",
-    updated: "Diperbarui: 19 Oktober 2026",
+    updated: "Diperbarui: 21 Oktober 2026",
     language: "Bahasa",
     sections: {
       privacy: [
@@ -52,7 +52,7 @@ const copy = {
     introPrivacy: "A summary of the minimal data that may be processed when you use this independent guide.",
     introTerms: "Brief terms for using Ah Poong Sentul Guide information responsibly.",
     introCookies: "Manage permissions for cookies that support site functions and help us understand usage.",
-    updated: "Updated: 19 October 2026",
+    updated: "Updated: 21 October 2026",
     language: "Language",
     sections: {
       privacy: [
@@ -81,15 +81,6 @@ const copy = {
   },
 } as const;
 
-function preference(defaultValue: boolean, key: string) {
-  try {
-    const saved = JSON.parse(localStorage.getItem("ahpoong-consent") || "{}");
-    return typeof saved[key] === "boolean" ? saved[key] : defaultValue;
-  } catch {
-    return defaultValue;
-  }
-}
-
 export default function LegalPage({ page, initialLanguage = "id" }: { page: PageType; initialLanguage?: Language }) {
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [analytics, setAnalytics] = useState(false);
@@ -98,8 +89,8 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
 
   useEffect(() => {
     applyAnalytics(readConsent()?.analytics === true);
-    setAnalytics(preference(false, "analytics"));
-    setPreferences(preference(true, "preferences"));
+    const sync=()=>setAnalytics(readConsent()?.analytics===true);sync();
+    return watchConsent(sync);
   }, []);
 
   const t = copy[language];
@@ -112,6 +103,7 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
 
   function savePreferences() {
     setSaved(saveConsentChoice({ essential: true, analytics, preferences: false }));
+    setAnalytics(readConsent()?.analytics===true);
   }
 
   return (
@@ -150,12 +142,13 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
 
             <div className="cookie-actions">
               <button className="primary-button" onClick={savePreferences}><Check size={17} /> {t.save}</button>
-              {saved !== null && <span className="saved-state" role="status"><Globe2 size={15} /> {saved ? t.saved : language === "id" ? "Pilihan berlaku di halaman ini, tetapi tidak tersimpan di perangkat." : "Choice applies on this page but could not be saved on this device."}</span>}
+              {saved !== null && <span className="saved-state" role="status"><Globe2 size={15} /> {consentStatus(language)}</span>}
             </div>
           </div>
         )}
       </section>
 
+      {page !== "terms" && <article className="legal-content legal-card"><h2>{language === "id" ? "Kinerja hosting Cloudflare" : "Cloudflare hosting performance"}</h2><p>{language === "id" ? "Hosting Cloudflare menyisipkan beacon Cloudflare Insights (RUM) secara terpisah dari Google Analytics. Beacon dapat mengirim metrik kinerja halaman, URL dan perujuk ke Cloudflare. Dokumentasi Cloudflare menyatakan beacon tidak memakai kuki atau penyimpanan peramban dan alamat IP permintaan dibuang di pusat data terdekat. Kontrol Google Analytics situs ini tidak mengendalikan beacon hosting. Keberadaan skrip tidak membuktikan pengiriman metrik berhasil." : "Cloudflare hosting injects a Cloudflare Insights (RUM) beacon separately from Google Analytics. It may send page performance metrics, URLs and referrers to Cloudflare. Cloudflare documents that the beacon uses no cookies or browser storage and discards the request IP address at its nearest data center. This site’s Google Analytics control does not control the hosting beacon. Script presence does not establish successful metric delivery."}</p><p>{language === "id" ? "Jika penyimpanan lokal gagal, penolakan dapat berlaku untuk tab ini selama penyimpanan sesi tersedia; bila keduanya gagal, hanya halaman ini. Tab atau peramban lain dapat berbeda." : "If local storage fails, denial can apply to this tab while session storage works; if both fail, only this page. Other tabs or browsers may differ."}</p><a href="https://developers.cloudflare.com/speed/observatory/rum-beacon/" target="_blank" rel="noopener noreferrer">{language === "id" ? "Dokumentasi Cloudflare RUM · diperiksa 21 Oktober 2026" : "Cloudflare RUM documentation · checked 21 October 2026"}</a></article>}
       <footer className="legal-footer"><p>{t.footer}</p><a href={language === "en" ? "/en/privacy/" : "/privacy/"}>{t.privacy}</a> · <a href={language === "en" ? "/en/terms/" : "/terms/"}>{t.terms}</a> · <a href={language === "en" ? "/en/cookies/" : "/cookies/"}>{t.cookies}</a></footer>
     </main>
   );

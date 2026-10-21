@@ -1,6 +1,6 @@
 /* River Market Archive design system: a tropical field guide with river-line motifs, handwritten notes and quiet editorial motion. */
 import React, { useEffect, useState } from "react";
-import { readConsent, saveConsentChoice, applyAnalytics } from "../consent";
+import { readConsent, saveConsentChoice, applyAnalytics, watchConsent, consentStatus } from "../consent";
 import {
   ArrowDownRight, ArrowUpRight, BusFront, CarFront, ChevronRight, Clock3, Compass, CupSoda,
   ExternalLink, Footprints, Fuel, Globe2, Info, MapPin, Menu, MoonStar, ParkingCircle,
@@ -278,7 +278,8 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
     applyAnalytics(readConsent()?.analytics === true);
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const stop=watchConsent(()=>{setCookieVisible(readConsent()===null);setStorageNotice(consentStatus(language));});
+    return () => {window.removeEventListener("scroll", onScroll);stop();};
   }, []);
 
   function selectLanguage(next: Language) {
@@ -288,7 +289,7 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
     const persisted = saveConsentChoice({ essential: true, preferences: true, analytics });
     setCookieVisible(false);
     setCookieOpen(false);
-    if (!persisted) setStorageNotice(language === "id" ? "Pilihan berlaku di halaman ini; tidak dapat disimpan di perangkat." : "Choice applies on this page; it could not be saved on this device.");
+    setStorageNotice(consentStatus(language));
   }
   const navTargets = ["overview", "story", "visit", "access", "nearby", "faq"];
   const navCompanion = language === "id" ? ["Overview", "The place", "Visit", "Getting there", "Nearby", "FAQ"] : ["Ringkasan", "Cerita tempat", "Kunjungan", "Akses", "Sekitar", "Tanya jawab"];
