@@ -85,13 +85,16 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [analytics, setAnalytics] = useState(false);
   const [preferences, setPreferences] = useState(true);
-  const [saved, setSaved] = useState<boolean | null>(null);
+  const [consentFeedback, setConsentFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     applyAnalytics(readConsent()?.analytics === true);
-    const sync=()=>setAnalytics(readConsent()?.analytics===true);sync();
+    const sync=()=>{
+      setAnalytics(readConsent()?.analytics===true);
+      setConsentFeedback(previous=>previous===null?null:consentStatus(language));
+    };sync();
     return watchConsent(sync);
-  }, []);
+  }, [language]);
 
   const t = copy[language];
   const title = page === "privacy" ? t.privacy : page === "terms" ? t.terms : t.cookies;
@@ -102,8 +105,9 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
   }
 
   function savePreferences() {
-    setSaved(saveConsentChoice({ essential: true, analytics, preferences: false }));
+    saveConsentChoice({ essential: true, analytics, preferences: false });
     setAnalytics(readConsent()?.analytics===true);
+    setConsentFeedback(consentStatus(language));
   }
 
   return (
@@ -138,11 +142,11 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
         ) : (
           <div className="cookie-panel">
             <PreferenceRow title={t.essential} body={t.essentialBody} checked disabled label={t.always} onChange={() => undefined} />
-            <PreferenceRow title={t.analytics} body={t.analyticsBody} checked={analytics} onChange={setAnalytics} />
+            <PreferenceRow title={t.analytics} body={t.analyticsBody} checked={analytics} onChange={value=>{setAnalytics(value);setConsentFeedback(null);}} />
 
             <div className="cookie-actions">
               <button className="primary-button" onClick={savePreferences}><Check size={17} /> {t.save}</button>
-              {saved !== null && <span className="saved-state" role="status"><Globe2 size={15} /> {consentStatus(language)}</span>}
+              {consentFeedback !== null && <span className="saved-state" role="status"><Globe2 size={15} /> {consentFeedback}</span>}
             </div>
           </div>
         )}
