@@ -114,3 +114,10 @@ client/public/__manus__/version.json
 
 # Local Worker emulator state
 .wrangler/
+
+# Temporary QA / debug scratch files (not part of source)
+/check-lang.mjs
+/inspect-body.mjs
+/test-render.tsx
+/scripts/debug-prerender.tsx
+/build.log
