@@ -1,5 +1,18 @@
+import { TOPIC_SLUGS } from "./client/src/lib/topics";
+
 type Env = { ASSETS: { fetch: (request: Request) => Promise<Response> } };
-const routes = new Set(['/', '/en/', '/privacy/', '/terms/', '/cookies/', '/en/privacy/', '/en/terms/', '/en/cookies/']);
+const baseRoutes = [
+  "/",
+  "/en/",
+  "/privacy/",
+  "/terms/",
+  "/cookies/",
+  "/en/privacy/",
+  "/en/terms/",
+  "/en/cookies/",
+];
+const topicRoutes = TOPIC_SLUGS.flatMap((s) => [`/${s}/`, `/en/${s}/`]);
+const routes = new Set([...baseRoutes, ...topicRoutes]);
 export default { async fetch(request: Request, env: Env): Promise<Response> {
  const url = new URL(request.url);
  if ((url.hostname === 'ahpoongsentul.com' || url.hostname === 'www.ahpoongsentul.com') && (url.protocol !== 'https:' || url.hostname !== 'ahpoongsentul.com')) { url.protocol = 'https:'; url.hostname = 'ahpoongsentul.com'; return Response.redirect(url.toString(),301); }

@@ -81,8 +81,9 @@ const copy = {
   },
 } as const;
 
-export default function LegalPage({ page, initialLanguage = "id" }: { page: PageType; initialLanguage?: Language }) {
-  const [language, setLanguage] = useState<Language>(initialLanguage);
+export default function LegalPage({ page, type, initialLanguage = "id", language: languageProp }: { page?: PageType; type?: PageType; initialLanguage?: Language; language?: Language }) {
+  const p = page ?? type ?? "privacy";
+  const [language, setLanguage] = useState<Language>(languageProp ?? initialLanguage ?? "id");
   const [analytics, setAnalytics] = useState(false);
   const [preferences, setPreferences] = useState(true);
   const [consentFeedback, setConsentFeedback] = useState<string | null>(null);
@@ -97,11 +98,11 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
   }, [language]);
 
   const t = copy[language];
-  const title = page === "privacy" ? t.privacy : page === "terms" ? t.terms : t.cookies;
-  const intro = page === "privacy" ? t.introPrivacy : page === "terms" ? t.introTerms : t.introCookies;
+  const title = p === "privacy" ? t.privacy : p === "terms" ? t.terms : t.cookies;
+  const intro = p === "privacy" ? t.introPrivacy : p === "terms" ? t.introTerms : t.introCookies;
 
   function changeLanguage(next: Language) {
-    window.location.href = `${next === "en" ? "/en" : ""}/${page}/`;
+    window.location.href = `${next === "en" ? "/en" : ""}/${p}/`;
   }
 
   function savePreferences() {
@@ -132,8 +133,8 @@ export default function LegalPage({ page, initialLanguage = "id" }: { page: Page
       </section>
 
       <section className="legal-content" aria-label={title}>
-        {page !== "cookies" ? (
-          t.sections[page].map(([heading, body]) => (
+        {p !== "cookies" ? (
+          t.sections[p].map(([heading, body]) => (
             <article key={heading} className="legal-card">
               <h2>{heading}</h2>
               <p>{body}</p>

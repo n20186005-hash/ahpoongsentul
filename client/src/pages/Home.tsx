@@ -1,6 +1,7 @@
 /* River Market Archive design system: a tropical field guide with river-line motifs, handwritten notes and quiet editorial motion. */
 import React, { useEffect, useState } from "react";
 import { readConsent, saveConsentChoice, applyAnalytics, watchConsent, consentStatus } from "../consent";
+import { TOPIC_GROUPS, getTopicContent, topicUrl } from "../lib/topics";
 import {
   ArrowDownRight, ArrowUpRight, BusFront, CarFront, ChevronRight, Clock3, Compass, CupSoda,
   ExternalLink, Footprints, Fuel, Globe2, Info, MapPin, Menu, MoonStar, ParkingCircle,
@@ -70,6 +71,9 @@ const copy = {
       ["Saran alokasi waktu", "1–2 jam", "Tambahkan waktu saat akhir pekan"],
     ],
     index: "Daftar lapangan",
+    guideHubKicker: "08 · PANDUAN TOPIK",
+    guideHubTitle: "Panduan rinci per topik: jam, biaya, akses, dan sekitar.",
+    guideHubIntro: "Setiap halaman di bawah mencobakan satu pertanyaan praktis. Jam dan lokasi yang dapat diverifikasi diberi tanggal; biaya, menu, dan status operasional fasilitas perlu dicek di lokasi.",
     introKicker: "01 · ORIENTASI",
     overviewTitle: "Bukan sekadar tempat makan. Ini adalah jeda di tepian Sentul.",
     overviewBody: "Ah Poong Sentul tercantum di Google Maps sebagai pasar terapung dan kompleks makan tepi sungai. Area ini berada di Ecoart Park Sentul City, di sisi Jalan Ir. H. Juanda, Cipambuan. Suasananya paling mudah dibaca lewat tiga unsur: air, paviliun, dan meja-meja yang membuat kunjungan terasa seperti singgah, bukan sekadar transaksi cepat.",
@@ -173,6 +177,9 @@ const copy = {
       ["Planning suggestion", "1–2 hours", "Allow more time on weekends"],
     ],
     index: "Field index",
+    guideHubKicker: "08 · TOPIC GUIDES",
+    guideHubTitle: "Topic-by-topic guides: hours, costs, access, and the wider area.",
+    guideHubIntro: "Each page below covers one practical question. Dated items are verifiable hours and location; facility costs, menus, and operating status should be checked on site.",
     introKicker: "01 · ORIENTATION",
     overviewTitle: "Not simply somewhere to eat. A pause on Sentul’s edge.",
     overviewBody: "Google Maps lists Ah Poong Sentul as a floating market and a riverside dining complex. It sits in Ecoart Park Sentul City, beside Jalan Ir. H. Juanda in Cipambuan. Its atmosphere is best understood through three elements: water, pavilions, and tables that make a visit feel like a stopover—not just a quick transaction.",
@@ -292,8 +299,8 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
     setStorageNotice(consentStatus(language));
   }
   const navTargets = ["overview", "story", "visit", "access", "nearby", "faq"];
-  const navCompanion = language === "id" ? ["Overview", "The place", "Visit", "Getting there", "Nearby", "FAQ"] : ["Ringkasan", "Cerita tempat", "Kunjungan", "Akses", "Sekitar", "Tanya jawab"];
-  const quickCompanion = language === "id" ? ["MAP RECORD", "PLACE TYPE", "OPENING NOTE", "FIELD RHYTHM"] : ["CATATAN PETA", "JENIS TEMPAT", "CATATAN JAM", "RITME KUNJUNGAN"];
+  const navCompanion = language === "id" ? ["Ringkasan", "Cerita tempat", "Kunjungan", "Akses", "Sekitar", "Tanya jawab"] : ["Overview", "The place", "Visit", "Getting there", "Nearby", "FAQ"];
+  const quickCompanion = language === "id" ? ["CATATAN PETA", "JENIS TEMPAT", "CATATAN JAM", "RITME KUNJUNGAN"] : ["MAP RECORD", "PLACE TYPE", "OPENING NOTE", "FIELD RHYTHM"];
   const quickIcons = [Sparkles, Compass, Clock3, Footprints];
   const transportIcons = [Plane, BusFront, CarFront, CarFront];
   const needIcons = [ParkingCircle, ShowerHead, Footprints, MoonStar, Utensils, Fuel];
@@ -390,6 +397,26 @@ export default function Home({ initialLanguage = "id" }: { initialLanguage?: Lan
             <section id="nearby" className="content-section nearby-section">
               <div className="nearby-media"><img src={ASSETS.riverwalk} alt={language === "id" ? "Jalur berpagar di tepi sungai dengan pepohonan — gambar referensi" : "Fenced riverside path with trees — reference image"} /></div>
               <div className="nearby-copy"><div className="section-kicker">{t.aroundKicker}</div><h2>{t.aroundTitle}</h2><p>{t.aroundIntro}</p><div className="nearby-list">{t.around.map(([title, body]) => <article key={title}><ChevronRight size={17} /><div><h3>{title}</h3><p>{body}</p></div></article>)}</div></div>
+            </section>
+
+            <section id="panduan" className="content-section guide-hub-section">
+              <div className="section-kicker">{t.guideHubKicker}</div>
+              <h2>{t.guideHubTitle}</h2>
+              <p>{t.guideHubIntro}</p>
+              <div className="topic-groups">
+                {TOPIC_GROUPS.map((g) => (
+                  <div className="topic-group" id={g.id} key={g.id}>
+                    <h3 className="topic-group-title">{language === "id" ? g.labelId : g.labelEn}</h3>
+                    <div className="topic-links">
+                      {g.slugs.map((s) => {
+                        const tc = getTopicContent(s, language);
+                        if (!tc) return null;
+                        return <a className="topic-link" key={s} href={topicUrl(s, language)}>{tc.title}</a>;
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </section>
 
             <section className="content-section photo-section">
